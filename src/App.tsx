@@ -1,8 +1,8 @@
 import { Suspense, useState, useTransition } from "react";
-import type { Department, Resource, User } from "./utils/types";
-import { clearCache, fetchData } from "./services/fetchData";
-import UserList from "./components/UserList";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
+import UserList from "./components/UserList";
+import { fetchData } from "./services/fetchData";
+import type { Department, Resource, User } from "./utils/types";
 
 function ErrorFallback({ error }: FallbackProps) {
   return (
@@ -39,8 +39,6 @@ export default function App() {
   function handleDepartmentChange(deptId: number): void {
     const url = `/api/users?departmentId=${deptId}`;
 
-    clearCache(url);
-
     const newResource = fetchData<User[]>(url);
 
     startTransition(() => {
@@ -56,16 +54,23 @@ export default function App() {
 
       {/* Department filter buttons */}
       <div className="dept-buttons">
-        {departments.map((dept) => (
-          <button
-            key={dept.id}
-            onClick={() => handleDepartmentChange(dept.id)}
-            disabled={isPending}
-            className={selectedDept === dept.id ? "active" : ""}
-          >
-            {dept.name}
-          </button>
-        ))}
+        {departments.map((dept) => {
+          const isCurrent =
+            new URL(window.location.href).searchParams.get("department") ==
+            dept.name;
+          return (
+            <button
+              key={dept.id}
+              onClick={() => {
+                handleDepartmentChange(dept.id);
+              }}
+              disabled={isCurrent}
+              className={selectedDept === dept.id ? "active" : ""}
+            >
+              {dept.name}
+            </button>
+          );
+        })}
       </div>
 
       {/* isPending indicator — shows while new data loads without hiding old UI */}
