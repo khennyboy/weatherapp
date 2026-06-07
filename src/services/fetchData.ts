@@ -21,6 +21,12 @@ export function fetchData<T>(url: string): Resource<T> {
         return res.json() as Promise<T>
       })
       .then((data: T) => {
+        return new Promise<T>((resolve) => {
+          setTimeout(() => resolve(data), 3000)
+        })
+      })
+
+      .then((data: T) => {
         status = 'success'
         result = data
       })
