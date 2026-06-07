@@ -1,0 +1,16 @@
+{
+  "departments": [
+    { "id": 1, "name": "Engineering" },
+    { "id": 2, "name": "Marketing" },
+    { "id": 3, "name": "Design" }
+  ],
+  "users": [
+    { "id": 1, "name": "Sheriff", "role": "Frontend Dev", "email": "sheriff@company.com", "departmentId": 1 },
+    { "id": 2, "name": "Aisha", "role": "Backend Dev", "email": "aisha@company.com", "departmentId": 1 },
+    { "id": 3, "name": "Emeka", "role": "UI Designer", "email": "emeka@company.com", "departmentId": 3 },
+    { "id": 4, "name": "Fatima", "role": "Marketing Lead", "email": "fatima@company.com", "departmentId": 2 },
+    { "id": 5, "name": "Chidi", "role": "DevOps", "email": "chidi@company.com", "departmentId": 1 },
+    { "id": 6, "name": "Ngozi", "role": "Brand Designer", "email": "ngozi@company.com", "departmentId": 3 },
+    { "id": 7, "name": "Tunde", "role": "SEO Specialist", "email": "tunde@company.com", "departmentId": 2 }
+  ]
+}
