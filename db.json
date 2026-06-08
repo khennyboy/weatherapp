@@ -5,7 +5,7 @@
     { "id": 3, "name": "Design" }
   ],
   "users": [
-    { "id": 1, "name": "Sheriff", "role": "Frontend Dev", "email": "sheriff@company.com", "departmentId": 1 },
+    { "id": 1, "name": "Sheriffbaba", "role": "Frontend Dev", "email": "sheriff@company.com", "departmentId": 1 },
     { "id": 2, "name": "Aisha", "role": "Backend Dev", "email": "aisha@company.com", "departmentId": 1 },
     { "id": 3, "name": "Emeka", "role": "UI Designer", "email": "emeka@company.com", "departmentId": 3 },
     { "id": 4, "name": "Fatima", "role": "Marketing Lead", "email": "fatima@company.com", "departmentId": 2 },

@@ -24,22 +24,20 @@ const departments: Department[] = [
   { id: 2, name: "Marketing" },
   { id: 3, name: "Design" },
 ];
-
 const initialResource: Resource<User[]> = fetchData<User[]>(
   "/api/users?departmentId=1",
 );
-
 export default function App() {
   const [resource, setResource] = useState<Resource<User[]>>(initialResource);
 
   const [selectedDept, setSelectedDept] = useState<number>(1);
-
   const [isPending, startTransition] = useTransition();
-
+  
   function handleDepartmentChange(deptId: number): void {
     const url = `/api/users?departmentId=${deptId}`;
-
     const newResource = fetchData<User[]>(url);
+    const dept = departments.find((d) => d.id === deptId);
+    window.history.pushState({}, "", `?department=${dept?.name}`);
 
     startTransition(() => {
       setSelectedDept(deptId);
@@ -52,7 +50,6 @@ export default function App() {
       <h1>Company Directory</h1>
       <p className="subtitle">Browse employees by department</p>
 
-      {/* Department filter buttons */}
       <div className="dept-buttons">
         {departments.map((dept) => {
           const isCurrent =
