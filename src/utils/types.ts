@@ -1,11 +1,11 @@
 // This file defines all the TypeScript types used across the app
 
 export interface User {
-  id: number
+  id?: number
   name: string
   role: string
   email: string
-  departmentId: number
+  departmentId: number | null
 }
 
 export interface Department {

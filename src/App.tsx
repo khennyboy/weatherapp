@@ -3,6 +3,8 @@ import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import UserList from "./components/UserList";
 import { fetchData } from "./services/fetchData";
 import type { Department, Resource, User } from "./utils/types";
+import UserForm from "./components/UserForm";
+import AddUser from "./components/AddUser";
 
 function ErrorFallback({ error }: FallbackProps) {
   return (
@@ -18,7 +20,7 @@ function ErrorFallback({ error }: FallbackProps) {
   );
 }
 
-// The departments list (same as what is in db.json)
+
 const departments: Department[] = [
   { id: 1, name: "Engineering" },
   { id: 2, name: "Marketing" },
@@ -28,11 +30,12 @@ const initialResource: Resource<User[]> = fetchData<User[]>(
   "/api/users?departmentId=1",
 );
 export default function App() {
+  console.log("App rendered");
   const [resource, setResource] = useState<Resource<User[]>>(initialResource);
 
   const [selectedDept, setSelectedDept] = useState<number>(1);
   const [isPending, startTransition] = useTransition();
-  
+
   function handleDepartmentChange(deptId: number): void {
     const url = `/api/users?departmentId=${deptId}`;
     const newResource = fetchData<User[]>(url);
@@ -45,9 +48,17 @@ export default function App() {
     });
   }
 
+  function refreshUsers(): void {
+    const url = `/api/users?departmentId=${selectedDept}`;
+    const newResource = fetchData<User[]>(url);
+    startTransition(() => {
+      setResource(newResource);
+    });
+  }
+
   return (
     <div className="app">
-      <h1>Company Directory</h1>
+      <h1 className="">Company Directory</h1>
       <p className="subtitle">Browse employees by department</p>
 
       <div className="dept-buttons">
@@ -78,6 +89,8 @@ export default function App() {
           <UserList resource={resource} />
         </Suspense>
       </ErrorBoundary>
+      <AddUser/>
+      <UserForm onUserAdded={refreshUsers} />
     </div>
   );
 }
