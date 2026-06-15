@@ -4,13 +4,12 @@ import type z from "zod";
 import { Userschema } from "../utils/Uschema";
 import type { User } from "../utils/types";
 import { AddData } from "../services/addData";
+import { useNavigate } from "react-router-dom";
 
 type TUserSchema = z.infer<typeof Userschema>;
-interface Props {
-  onUserAdded: () => void;
-}
 
-const UserForm = ({ onUserAdded }: Props) => {
+const UserForm = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -36,22 +35,30 @@ const UserForm = ({ onUserAdded }: Props) => {
     } else {
       userInput.departmentId = 3;
     }
+
     try {
       await AddData("http://localhost:3001/users", userInput);
       alert("User added successfully!");
-      onUserAdded();
+      navigate("/", { state: { refresh: true } });
     } catch (error) {
       alert("Failed: " + error);
     }
   }
 
   return (
-    <div>
+    <div className="form-page">
+      <h2>Add new staff</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <input type="text" placeholder="name" {...register("name")} />
+        <div className="field">
+          <label>Full name</label>
+          <input
+            type="text"
+            placeholder="e.g. Chidi Okeke"
+            {...register("name")}
+          />
         </div>
-        <div>
+        <div className="field">
+          <label>Role</label>
           <select {...register("role")}>
             <option value="Frontend Dev">Frontend Dev</option>
             <option value="Backend Dev">Backend Dev</option>
@@ -62,16 +69,16 @@ const UserForm = ({ onUserAdded }: Props) => {
             <option value="SEO Specialist">SEO Specialist</option>
           </select>
         </div>
-        <div>
-          <input type="email" {...register("email")} placeholder="Email" />
+        <div className="field">
+          <label>Email address</label>
+          <input
+            type="email"
+            placeholder="name@company.io"
+            {...register("email")}
+          />
         </div>
-
-        <button
-          type="submit"
-          className="disabled:cursor-not-allowed cursor-pointer"
-          disabled={isSubmitting}
-        >
-          Submit
+        <button type="submit" className="submit-btn" disabled={isSubmitting}>
+          {isSubmitting ? "Adding..." : "Add staff member"}
         </button>
       </form>
     </div>

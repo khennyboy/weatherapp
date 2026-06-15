@@ -1,7 +1,7 @@
 // This file defines all the TypeScript types used across the app
 
 export interface User {
-  id?: number
+  id?: string
   name: string
   role: string
   email: string
