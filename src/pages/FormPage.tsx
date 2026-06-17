@@ -19,18 +19,10 @@ const UserForm = () => {
   });
 
   async function onSubmit(data: TUserSchema) {
-    console.log(data);
     const userInput: User = { ...data, departmentId: null };
-    if (
-      userInput.role === "Frontend Dev" ||
-      userInput.role === "Backend Dev" ||
-      userInput.role === "DevOps"
-    ) {
+    if (["Frontend Dev", "Backend Dev", "DevOps"].includes(userInput.role)) {
       userInput.departmentId = 1;
-    } else if (
-      userInput.role === "UI Designer" ||
-      userInput.role === "Brand Designer"
-    ) {
+    } else if (["UI Designer", "Brand Designer"].includes(userInput.role)) {
       userInput.departmentId = 2;
     } else {
       userInput.departmentId = 3;
@@ -45,42 +37,69 @@ const UserForm = () => {
     }
   }
 
+  const labelClass = "block mb-1.5 text-sm font-medium text-slate-300";
+  const inputClass =
+    "w-full rounded-lg border border-slate-700 bg-slate-800/60 px-3.5 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20";
+
   return (
-    <div className="form-page">
-      <h2>Add new staff</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="field">
-          <label>Full name</label>
-          <input
-            type="text"
-            placeholder="e.g. Chidi Okeke"
-            {...register("name")}
-          />
+    <div className="min-h-screen bg-slate-950 px-4 py-12 text-slate-100">
+      <div className="mx-auto max-w-md">
+        {/* Header */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold tracking-tight text-white">
+            Add new staff
+          </h2>
+          <p className="mt-1 text-sm text-slate-400">
+            Fill in the details below to onboard a team member.
+          </p>
         </div>
-        <div className="field">
-          <label>Role</label>
-          <select {...register("role")}>
-            <option value="Frontend Dev">Frontend Dev</option>
-            <option value="Backend Dev">Backend Dev</option>
-            <option value="UI Designer">UI Designer</option>
-            <option value="Marketing Lead">Marketing Lead</option>
-            <option value="DevOps">DevOps</option>
-            <option value="Brand Designer">Brand Designer</option>
-            <option value="SEO Specialist">SEO Specialist</option>
-          </select>
+
+        {/* Form card */}
+        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-xl">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <div>
+              <label className={labelClass}>Full name</label>
+              <input
+                type="text"
+                placeholder="e.g. Chidi Okeke"
+                className={inputClass}
+                {...register("name")}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass}>Role</label>
+              <select className={inputClass} {...register("role")}>
+                <option value="Frontend Dev">Frontend Dev</option>
+                <option value="Backend Dev">Backend Dev</option>
+                <option value="UI Designer">UI Designer</option>
+                <option value="Marketing Lead">Marketing Lead</option>
+                <option value="DevOps">DevOps</option>
+                <option value="Brand Designer">Brand Designer</option>
+                <option value="SEO Specialist">SEO Specialist</option>
+              </select>
+            </div>
+
+            <div>
+              <label className={labelClass}>Email address</label>
+              <input
+                type="email"
+                placeholder="name@company.io"
+                className={inputClass}
+                {...register("email")}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-2 w-full rounded-lg bg-teal-600 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isSubmitting ? "Adding..." : "Add staff member"}
+            </button>
+          </form>
         </div>
-        <div className="field">
-          <label>Email address</label>
-          <input
-            type="email"
-            placeholder="name@company.io"
-            {...register("email")}
-          />
-        </div>
-        <button type="submit" className="submit-btn" disabled={isSubmitting}>
-          {isSubmitting ? "Adding..." : "Add staff member"}
-        </button>
-      </form>
+      </div>
     </div>
   );
 };

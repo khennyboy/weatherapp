@@ -13,12 +13,12 @@ import UserList from "../components/UserList";
 
 function ErrorFallback({ error }: FallbackProps) {
   return (
-    <div className="error-box">
-      <p>⚠️ Something went wrong</p>
-      <p className="error-detail">
+    <div className="mx-auto max-w-md rounded-xl border border-red-800/50 bg-red-950/30 px-6 py-5 text-sm">
+      <p className="font-semibold text-red-400">⚠️ Something went wrong</p>
+      <p className="mt-1 text-red-300/70">
         {error instanceof Error ? error.message : "Unknown error"}
       </p>
-      <p className="error-hint">
+      <p className="mt-3 text-slate-500">
         Make sure json-server is running on port 3001
       </p>
     </div>
@@ -30,13 +30,14 @@ const departments: Department[] = [
   { id: 2, name: "Marketing" },
   { id: 3, name: "Design" },
 ];
+
 const initialResource: Resource<User[]> = fetchData<User[]>(
   "/api/users?departmentId=1",
 );
+
 export default function Homepage() {
   const location = useLocation();
   const [resource, setResource] = useState<Resource<User[]>>(initialResource);
-
   const [selectedDept, setSelectedDept] = useState<number>(1);
   const [isPending, startTransition] = useTransition();
 
@@ -45,7 +46,6 @@ export default function Homepage() {
     const newResource = fetchData<User[]>(url);
     const dept = departments.find((d) => d.id === deptId);
     window.history.pushState({}, "", `?department=${dept?.name}`);
-
     startTransition(() => {
       setSelectedDept(deptId);
       setResource(newResource);
@@ -63,43 +63,71 @@ export default function Homepage() {
   useEffect(() => {
     if (location.state?.refresh) {
       refreshUsers();
-    } else {
-      console.log("hello");
     }
   }, [location.state?.refresh, refreshUsers]);
+
   return (
-    <div className="app">
-      <h1 className="">Company Directory</h1>
-      <p className="subtitle">Browse employees by department</p>
+    <div className="min-h-screen bg-slate-950 px-4 py-12 text-slate-100">
+      <div className="mx-auto max-w-3xl">
+        {/* Header */}
+        <div className="mb-10">
+          <h1 className="text-3xl font-bold tracking-tight text-white">
+            Company Directory
+          </h1>
+          <p className="mt-1 text-slate-400">Browse employees by department</p>
+        </div>
 
-      <div className="dept-buttons">
-        {departments.map((dept) => {
-          const isCurrent =
-            new URL(window.location.href).searchParams.get("department") ==
-            dept.name;
-          return (
-            <button
-              key={dept.id}
-              onClick={() => {
-                handleDepartmentChange(dept.id);
-              }}
-              disabled={isCurrent}
-              className={selectedDept === dept.id ? "active" : ""}
-            >
-              {dept.name}
-            </button>
-          );
-        })}
+        {/* Department tabs */}
+        <div className="mb-6 flex gap-1 rounded-xl border border-slate-800 bg-slate-900 p-1">
+          {departments.map((dept) => {
+            const isActive = selectedDept === dept.id;
+            return (
+              <button
+                key={dept.id}
+                onClick={() => handleDepartmentChange(dept.id)}
+                disabled={isActive}
+                className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                  isActive
+                    ? "bg-teal-600 text-white shadow-sm shadow-teal-900"
+                    : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+                }`}
+              >
+                {dept.name}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Pending indicator */}
+        {isPending && (
+          <p className="mb-4 text-sm text-teal-400/80">
+            ⏳ Loading department...
+          </p>
+        )}
+
+        {/* User list */}
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <Suspense
+            fallback={
+              <p className="py-10 text-center text-sm text-slate-500">
+                ⏳ Loading employees...
+              </p>
+            }
+          >
+            <UserList resource={resource} />
+          </Suspense>
+        </ErrorBoundary>
+
+        {/* Add Staff link */}
+        <div className="mt-10 flex justify-end">
+          <Link
+            to="/addStaff"
+            className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-500 active:scale-95"
+          >
+            + Add Staff
+          </Link>
+        </div>
       </div>
-
-      {isPending && <p className="pending-msg">⏳ Loading department...</p>}
-
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Suspense fallback={<p className="loading">⏳ Loading employees...</p>}>
-          <UserList resource={resource} />
-        </Suspense>
-      </ErrorBoundary>
-      <Link to="/addStaff">Add Staff</Link>
     </div>
   );
 }
