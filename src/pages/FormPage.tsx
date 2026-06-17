@@ -4,7 +4,7 @@ import type z from "zod";
 import { Userschema } from "../utils/Uschema";
 import type { User } from "../utils/types";
 import { AddData } from "../services/addData";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type TUserSchema = z.infer<typeof Userschema>;
 
@@ -44,7 +44,13 @@ const UserForm = () => {
   return (
     <div className="min-h-screen bg-slate-950 px-4 py-12 text-slate-100">
       <div className="mx-auto max-w-md">
-        {/* Header */}
+        <Link
+          to="/"
+          className="mb-6 inline-flex items-center gap-1.5 text-sm text-slate-400 transition hover:text-teal-400"
+        >
+          <span>←</span>
+          <span>Back to Home</span>
+        </Link>
         <div className="mb-8">
           <h2 className="text-2xl font-bold tracking-tight text-white">
             Add new staff

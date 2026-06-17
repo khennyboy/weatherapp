@@ -6,7 +6,7 @@ import {
   useTransition,
 } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import type { Department, Resource, User } from "../utils/types";
 import { fetchData } from "../services/fetchData";
 import UserList from "../components/UserList";
@@ -31,21 +31,24 @@ const departments: Department[] = [
   { id: 3, name: "Design" },
 ];
 
-const initialResource: Resource<User[]> = fetchData<User[]>(
-  "/api/users?departmentId=1",
-);
-
 export default function Homepage() {
   const location = useLocation();
-  const [resource, setResource] = useState<Resource<User[]>>(initialResource);
-  const [selectedDept, setSelectedDept] = useState<number>(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedDept, setSelectedDept] = useState<number>(
+    departments.find((d) => d.name === searchParams.get("department"))?.id || 1,
+  );
+
+  const [resource, setResource] = useState<Resource<User[]>>(
+    fetchData<User[]>(`/api/users?departmentId=${selectedDept}`),
+  );
+
   const [isPending, startTransition] = useTransition();
 
   function handleDepartmentChange(deptId: number): void {
+    const dept = departments.find((d) => d.id === deptId);
     const url = `/api/users?departmentId=${deptId}`;
     const newResource = fetchData<User[]>(url);
-    const dept = departments.find((d) => d.id === deptId);
-    window.history.pushState({}, "", `?department=${dept?.name}`);
+    setSearchParams({ department: dept?.name as string });
     startTransition(() => {
       setSelectedDept(deptId);
       setResource(newResource);
@@ -58,7 +61,7 @@ export default function Homepage() {
     startTransition(() => {
       setResource(newResource);
     });
-  }, [selectedDept, startTransition]);
+  }, [selectedDept]);
 
   useEffect(() => {
     if (location.state?.refresh) {
@@ -69,7 +72,6 @@ export default function Homepage() {
   return (
     <div className="min-h-screen bg-slate-950 px-4 py-12 text-slate-100">
       <div className="mx-auto max-w-3xl">
-        {/* Header */}
         <div className="mb-10">
           <h1 className="text-3xl font-bold tracking-tight text-white">
             Company Directory
@@ -77,7 +79,6 @@ export default function Homepage() {
           <p className="mt-1 text-slate-400">Browse employees by department</p>
         </div>
 
-        {/* Department tabs */}
         <div className="mb-6 flex gap-1 rounded-xl border border-slate-800 bg-slate-900 p-1">
           {departments.map((dept) => {
             const isActive = selectedDept === dept.id;
@@ -98,14 +99,12 @@ export default function Homepage() {
           })}
         </div>
 
-        {/* Pending indicator */}
         {isPending && (
           <p className="mb-4 text-sm text-teal-400/80">
             ⏳ Loading department...
           </p>
         )}
 
-        {/* User list */}
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Suspense
             fallback={
