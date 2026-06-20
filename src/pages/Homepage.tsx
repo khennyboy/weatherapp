@@ -5,25 +5,13 @@ import {
   useState,
   useTransition,
 } from "react";
-import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
-import type { Department, Resource, User } from "../utils/types";
-import { fetchData } from "../services/fetchData";
+import StaffList from "../components/deleteData";
 import UserList from "../components/UserList";
+import { fetchData } from "../services/fetchData";
+import type { Department, Resource, User } from "../utils/types";
 
-function ErrorFallback({ error }: FallbackProps) {
-  return (
-    <div className="mx-auto max-w-md rounded-xl border border-red-800/50 bg-red-950/30 px-6 py-5 text-sm">
-      <p className="font-semibold text-red-400">⚠️ Something went wrong</p>
-      <p className="mt-1 text-red-300/70">
-        {error instanceof Error ? error.message : "Unknown error"}
-      </p>
-      <p className="mt-3 text-slate-500">
-        Make sure json-server is running on port 3001
-      </p>
-    </div>
-  );
-}
+
 
 const departments: Department[] = [
   { id: 1, name: "Engineering" },
@@ -105,19 +93,16 @@ export default function Homepage() {
           </p>
         )}
 
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <Suspense
-            fallback={
-              <p className="py-10 text-center text-sm text-slate-500">
-                ⏳ Loading employees...
-              </p>
-            }
-          >
-            <UserList resource={resource} />
-          </Suspense>
-        </ErrorBoundary>
+        <Suspense
+          fallback={
+            <p className="py-10 text-center text-sm text-slate-500">
+              ⏳ Loading employees...
+            </p>
+          }
+        >
+          <UserList resource={resource} />
+        </Suspense>
 
-        {/* Add Staff link */}
         <div className="mt-10 flex justify-end">
           <Link
             to="/addStaff"
@@ -127,6 +112,15 @@ export default function Homepage() {
           </Link>
         </div>
       </div>
+      <Suspense
+        fallback={
+          <p className="py-10 text-center text-sm text-slate-500">
+            ⏳ Loading staff list
+          </p>
+        }
+      >
+        <StaffList staff={resource} />
+      </Suspense>
     </div>
   );
 }
