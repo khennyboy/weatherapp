@@ -1,6 +1,5 @@
-function delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+import { delay } from "../utils/delay";
+
 export async function AddData<T>(url: string, data: T) {
     try {
         await delay(2000);

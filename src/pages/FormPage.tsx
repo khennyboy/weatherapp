@@ -39,11 +39,11 @@ const UserForm = () => {
 
   const labelClass = "block mb-1.5 text-sm font-medium text-slate-300";
   const inputClass =
-    "w-full rounded-lg border border-slate-700 bg-slate-800/60 px-3.5 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20";
+    "w-full  rounded-lg border border-slate-700 bg-slate-800/60 px-3.5 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20";
 
   return (
     <div className="min-h-screen bg-slate-950 px-4 py-12 text-slate-100">
-      <div className="mx-auto max-w-md">
+      <div className="mx-auto max-w-md ">
         <Link
           to="/"
           className="mb-6 inline-flex items-center gap-1.5 text-sm text-slate-400 transition hover:text-teal-400"

@@ -11,8 +11,6 @@ import UserList from "../components/UserList";
 import { fetchData } from "../services/fetchData";
 import type { Department, Resource, User } from "../utils/types";
 
-
-
 const departments: Department[] = [
   { id: 1, name: "Engineering" },
   { id: 2, name: "Marketing" },
@@ -108,7 +106,7 @@ export default function Homepage() {
             to="/addStaff"
             className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-500 active:scale-95"
           >
-            + Add Staff
+            + Add Staff 
           </Link>
         </div>
       </div>
@@ -119,7 +117,7 @@ export default function Homepage() {
           </p>
         }
       >
-        <StaffList staff={resource} />
+        <StaffList staff={resource} onDeleted={refreshUsers} />
       </Suspense>
     </div>
   );
