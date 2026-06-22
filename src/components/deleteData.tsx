@@ -2,7 +2,7 @@ import { useOptimistic, useTransition } from "react";
 import { delay } from "../utils/delay";
 import type { Resource, User } from "../utils/types";
 
-function StaffList({
+function DeleteStaff({
   staff,
   onDeleted,
 }: {
@@ -64,4 +64,4 @@ function StaffList({
   );
 }
 
-export default StaffList;
+export default DeleteStaff;

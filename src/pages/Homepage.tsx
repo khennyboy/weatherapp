@@ -6,10 +6,10 @@ import {
   useTransition,
 } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
-import StaffList from "../components/deleteData";
 import UserList from "../components/UserList";
 import { fetchData } from "../services/fetchData";
 import type { Department, Resource, User } from "../utils/types";
+import DeleteStaff from "../components/deleteData";
 
 const departments: Department[] = [
   { id: 1, name: "Engineering" },
@@ -117,7 +117,7 @@ export default function Homepage() {
           </p>
         }
       >
-        <StaffList staff={resource} onDeleted={refreshUsers} />
+        <DeleteStaff staff={resource} onDeleted={refreshUsers} />
       </Suspense>
     </div>
   );
