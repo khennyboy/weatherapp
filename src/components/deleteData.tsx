@@ -1,6 +1,6 @@
-import { useOptimistic, useState, useTransition } from "react";
-import type { Resource, User } from "../utils/types";
+import { useOptimistic, useTransition } from "react";
 import { delay } from "../utils/delay";
+import type { Resource, User } from "../utils/types";
 
 function StaffList({
   staff,
@@ -11,7 +11,6 @@ function StaffList({
 }) {
   const users: User[] = staff.read();
   const [isPending, startTransition] = useTransition();
-  const [index, setIndex] = useState<string>("");
   const [optimisticStaff, removeOptimistic] = useOptimistic(
     users,
     (current, idToRemove: string) =>
@@ -19,7 +18,6 @@ function StaffList({
   );
 
   function handleDelete(id: string) {
-    setIndex(id);
     startTransition(async () => {
       removeOptimistic(id);
       await delay(2000);
@@ -42,20 +40,18 @@ function StaffList({
           </li>
         )}
         {optimisticStaff.map((person) => {
-          const isDeleting = person.id === index && isPending;
           return (
             <li
               key={person.id}
-              className={`flex items-center justify-between px-4 py-3 transition-opacity duration-200`}
+              className={`flex items-center justify-between px-4 py-3 transition-opacity duration-200 ${
+                isPending ? "opacity-60" : "opacity-100"
+              }`}
             >
               <span className="text-sm font-medium text-slate-100">
                 {person.name}
               </span>
               <button
-                onClick={() => {
-                  handleDelete(person.id as string);
-                }}
-                disabled={isDeleting}
+                onClick={() => handleDelete(person.id as string)}
                 className="cursor-pointer rounded-lg px-3 py-1.5 text-sm font-medium text-red-400 transition-colors hover:bg-red-950/40 hover:text-red-300 disabled:cursor-not-allowed disabled:text-slate-600 disabled:hover:bg-transparent"
               >
                 Remove
